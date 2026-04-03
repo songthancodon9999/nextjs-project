@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
-import '../../styles/users.css';
+// import '../../styles/users.css';
+import { Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+
 
 interface IUser {
+    _id: string;
     email: string;
     name: string;
     role: string;
@@ -11,9 +15,7 @@ interface IUser {
 const UsersTable = () => {
     const [usersTableData, setUsersTableData] = useState([]);
     useEffect(() => {
-        console.log('UsersTable mounted');
-
-
+        // console.log('UsersTable mounted');
         getData();
     }, []);
 
@@ -45,30 +47,37 @@ const UsersTable = () => {
         console.log('Users fetched:', users);
         setUsersTableData(users.data.result);
     }
-    console.log('UsersTable rendered');
+    // console.log('UsersTable rendered');
+
+    const columns: ColumnsType<IUser> = [
+        {
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
+            render: (value, record) => {
+                return <a>{record.email}</a>
+            }
+
+        },
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Role',
+            dataIndex: 'role',
+            key: 'role',
+        }
+    ]
 
     return (
         <div>
             <h2>Users table</h2>
-
-            <table>
-                 <thead>
-                    <tr>
-                        <td>Email</td>
-                        <td>Name</td>
-                        <td>Role</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {usersTableData.map((user: IUser, index: number) => (
-                        <tr key={index}>
-                            <td>{user.email}</td>
-                            <td>{user.name}</td>
-                            <td>{user.role}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <Table
+                columns={columns}
+                dataSource={usersTableData}
+                rowKey="_id" />
         </div>
     );
 }
